@@ -1,0 +1,6 @@
+<xml>
+    <Encrypt><![CDATA[%s]]></Encrypt>
+    <MsgSignature><![CDATA[%s]]></MsgSignature>
+    <TimeStamp>%s</TimeStamp>
+    <Nonce><![CDATA[%s]]></Nonce>
+</xml>
