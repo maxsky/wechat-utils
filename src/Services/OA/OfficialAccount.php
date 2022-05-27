@@ -13,10 +13,11 @@ use MaxSky\WeChat\Exceptions\WeChatUtilsException;
 use MaxSky\WeChat\Services\WeChatBase;
 use MaxSky\WeChat\Utils\Traits\SignPackage;
 use MaxSky\WeChat\Utils\Traits\WeChatOAMessage;
+use Psr\Http\Message\StreamInterface;
 
 class OfficialAccount extends WeChatBase {
 
-    use WeChatOAMessage, SignPackage, TemplateMessage;
+    use WeChatOAMessage, SignPackage;
 
     private $appId;
     private $appSecret;
@@ -37,6 +38,8 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html#3
+     *
      * @param string $code
      *
      * @return array
@@ -66,6 +69,8 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId
+     *
      * @param string $open_id
      *
      * @return array
@@ -88,6 +93,8 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#54
+     *
      * @return string
      * @throws WeChatUtilsException
      */
@@ -120,6 +127,8 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html#5
+     *
      * @param string $open_id
      * @param string $template_id
      * @param array  $data
@@ -150,15 +159,17 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html
+     *
      * @param bool       $limit          forever
      * @param string     $action_name    QrCode type
      * @param int|string $scene_value
      * @param int        $expire_seconds default：2592000s, 30 days
      *
-     * @return array|null
+     * @return array
      * @throws WeChatUtilsException
      */
-    public function createQrcode(bool $limit, string $action_name, $scene_value, int $expire_seconds = 2592000): ?array {
+    public function createQrcode(bool $limit, string $action_name, $scene_value, int $expire_seconds = 2592000): array {
         if (!$this->access_token) {
             throw new WeChatUtilsException('Must set Access Token first.');
         }
@@ -192,8 +203,24 @@ class OfficialAccount extends WeChatBase {
                 'access_token' => $this->access_token
             ],
             'json' => $params
-        ]);
+        ], 'POST');
 
         return $this->handleResponse($response);
+    }
+
+    /**
+     * @url https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html
+     *
+     * @param string $ticket
+     *
+     * @return StreamInterface
+     * @throws WeChatUtilsException
+     */
+    public function getQrcode(string $ticket): StreamInterface {
+        return $this->httpRequest(WECHAT_OA_UTIL_SHOW_QRCODE, [
+            'query' => [
+                'ticket' => urlencode($ticket)
+            ]
+        ]);
     }
 }

@@ -21,7 +21,7 @@ trait WeChatMPUtil {
      * @return array
      * @throws WeChatUtilsException
      */
-    public function decryptSessionData(string $session_key, string $iv, string $encrypted_data): array {
+    public function decryptUserData(string $session_key, string $iv, string $encrypted_data): array {
         if (strlen($session_key) !== 24) {
             throw new WeChatUtilsException(WECHAT_MP_ERROR_CODE[-41001]);
         }

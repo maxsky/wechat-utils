@@ -28,6 +28,8 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
+     *
      * @param string $code
      *
      * @return array|null
@@ -47,6 +49,8 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.get.html
+     *
      * 有限制获取小程序码
      *
      * @param string $path       最长 128 字节
@@ -82,6 +86,8 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html
+     *
      * 无限制获取小程序码（适用于自定参数）
      *
      * @param string      $scene      最大 32 个可见字符，只支持数字，大小写英文以及部分特殊字符
@@ -119,6 +125,8 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html
+     *
      * @param string      $open_id
      * @param string      $template_id
      * @param array       $data

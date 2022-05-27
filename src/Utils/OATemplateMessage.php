@@ -11,7 +11,7 @@ namespace MaxSky\WeChat\Utils;
 
 use Exception;
 
-class OAMessage {
+class OATemplateMessage {
 
     /**
      * @param array  $struct

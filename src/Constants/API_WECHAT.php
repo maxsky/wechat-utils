@@ -29,6 +29,7 @@ const WECHAT_OA_INVOICE_INSERT_TO_CARD = 'https://api.weixin.qq.com/card/invoice
 
 const WECHAT_OA_UTIL_GET_SHORT_URL = 'https://api.weixin.qq.com/cgi-bin/shorturl';
 const WECHAT_OA_UTIL_CREATE_QRCODE = 'https://api.weixin.qq.com/cgi-bin/qrcode/create';
+const WECHAT_OA_UTIL_SHOW_QRCODE = 'https://mp.weixin.qq.com/cgi-bin/showqrcode';
 const WECHAT_OA_UTIL_SEND_TEMPLATE_MESSAGE = 'https://api.weixin.qq.com/cgi-bin/message/template/send';
 
 /** Mini Program */
