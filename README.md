@@ -2,6 +2,8 @@
 
 该库用于微信相关接口调用
 
+要求：`PHP >= 7.2.5`
+
 安装：`composer require maxsky/wechat-utils`
 
 ## App
