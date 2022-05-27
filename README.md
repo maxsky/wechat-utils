@@ -2,6 +2,8 @@
 
 该库用于微信相关接口调用
 
+安装：`composer require maxsky/wechat-utils`
+
 ## App
 
 App 目前仅完成一个方法用于登录获取用户信息
