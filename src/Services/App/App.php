@@ -24,9 +24,11 @@ class App extends WeChatBase {
      */
     public function getUserInfoFromAuth(string $auth_access_token, string $open_id, string $lang = 'zh_CN'): array {
         $response = $this->httpRequest(WECHAT_GET_USER_INFO_FROM_AUTH, [
-            'access_token' => $auth_access_token,
-            'openid' => $open_id,
-            'lang' => $lang
+            'query' => [
+                'access_token' => $auth_access_token,
+                'openid' => $open_id,
+                'lang' => $lang
+            ]
         ]);
 
         return $this->handleResponse($response);
