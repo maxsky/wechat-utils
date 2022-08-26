@@ -29,7 +29,9 @@ class TestOA extends TestCase {
         try {
             $this->assertIsArray($this->oa->getUserInfoByAuthCode('test'));
         } catch (WeChatUtilsException $e) {
-            $this->assertTrue(true);
+            if ($e->getCode() === 40013) {
+                $this->assertTrue(true);
+            }
         }
     }
 }

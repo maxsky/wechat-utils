@@ -27,7 +27,9 @@ class TestApp extends TestCase {
         try {
             $this->assertIsArray($this->app->getUserInfoFromAuth('test', 'test'));
         } catch (WeChatUtilsException $e) {
-            $this->assertTrue(true);
+            if ($e->getCode() === 40001) {
+                $this->assertTrue(true);
+            }
         }
     }
 }
