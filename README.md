@@ -17,8 +17,6 @@ $app = new \MaxSky\WeChat\Services\App\App();
 $userInfo = $app->getUserInfoFromAuth('auth_access_token', 'open_id');
 ```
 
-
-
 ## 公众号
 
 ### 一般方法
@@ -26,7 +24,7 @@ $userInfo = $app->getUserInfoFromAuth('auth_access_token', 'open_id');
 该方法用于微信网页授权登录获取用户信息
 
 ```php
-$oa = new \MaxSky\WeChat\Services\OA\OfficialAccount();
+$oa = new \MaxSky\WeChat\Services\OA\OfficialAccount('app_id', 'app_secret');
 
 /** @var array */
 $userInfo = $oa->getUserInfoByAuthCode('js_auth_code');
@@ -34,11 +32,18 @@ $userInfo = $oa->getUserInfoByAuthCode('js_auth_code');
 
 ### Access Token 方法
 
-```php
-// 通过 AppID 和 AppSecret 获取 Access Token，该 Token 不同于 auth_access_token，需缓存，建议缓存 7000s 左右
-$accessToken = $oa->getAccessToken('app_id', 'app_secret');
+这里展示了已有的需要 Access Token 的一些方法
 
-$oa = $oa->setAccessToken($accessToken);
+```php
+// 该 Token 不同于 auth_access_token，需缓存，建议缓存 7000s 左右，不大于 7200s
+// 这里简单示例从缓存中拿出 Access Token，如果存在只需要调用 setAccessToken 即可，否则重新获取
+// 成功获取时会自动设置到当前对象成员 access_token，即 $oa->access_token，故无需手动 setAccessToken
+if ($accessTokenFromCacheExist) {
+    $oa->setAccessToken($accessTokenFromCacheExist);
+} else {
+    $accessToken = $oa->getAccessToken('app_id', 'app_secret');
+    // TODO: 设置到缓存
+}
 
 /** @var array */
 $userInfo = $oa->getUserInfo('open_id');
@@ -69,10 +74,15 @@ $result = $oa->sendTemplateMessage('open_id', 'template_id', $data, 'url');
 ### JsAPI Ticket 方法
 
 ```php
-// JsApi Ticket 需缓存，建议缓存 7000s 左右
-$jsApiTicket = $oa->getJsApiTicket();
+// JsApi Ticket 需缓存，建议缓存 7000s 左右，不大于 7200s
+// 同 Access Token 缓存
 
-$oa = $oa->setJsApiTicket($jsApiTicket);
+if ($jsApiTicketFromCacheExist) {
+    $oa->setJsApiTicket($jsApiTicketFromCacheExist);
+} else {
+    $jsApiTicket = $oa->getJsApiTicket();
+    // TODO: 设置到
+}
 
 // URL 签名包
 $signPkg = $oa->getSignPackage('url');
@@ -80,9 +90,9 @@ $signPkg = $oa->getSignPackage('url');
 
 ### 消息方法
 
-
-
 ## 小程序
+
+### 登录
 
 小程序登录，通过授权 `code` 获取 `session` 数组，小程序获取用户信息后传递 `iv` 及加密用户数据到后端，通过 `decryptUserData` 方法解密得到微信用户数据
 
@@ -94,4 +104,15 @@ $session = $mp->code2Session('js_auth_code');
 /** @var array */
 $userInfo = $mp->decryptUserData($session['session_key'], 'iv_from_request', 'encrypted_data_from_request');
 ```
+
+### 获取用户手机号
+
+需要先获取 `Access Token`，这里通过设置
+
+```php
+$mp->getAccessToken(); // 忽略返回值
+
+$phoneInfo = $mp->code2PhoneNumber('code');
+```
+
 

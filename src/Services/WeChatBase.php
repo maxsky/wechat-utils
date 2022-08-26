@@ -16,26 +16,32 @@ use Throwable;
 
 abstract class WeChatBase {
 
+    protected $appId = null;
+    protected $appSecret = null;
+
     protected $access_token;
 
     protected $httpClient;
 
-    public function __construct() {
+    public function __construct(?string $app_id = null, ?string $app_secret = null) {
+        $this->appId = $app_id;
+        $this->appSecret = $app_secret;
+
         $this->httpClient = new Client();
     }
 
     /**
-     * @param string $app_id
-     * @param string $app_secret
+     * @param string|null $app_id
+     * @param string|null $app_secret
      *
      * @return string
      * @throws WeChatUtilsException
      */
-    public function getAccessToken(string $app_id, string $app_secret): string {
+    public function getAccessToken(?string $app_id = null, ?string $app_secret = null): string {
         $response = $this->httpRequest(WECHAT_OA_GET_API_ACCESS_TOKEN, [
             'query' => [
-                'appid' => $app_id,
-                'secret' => $app_secret,
+                'appid' => $app_id ?: $this->appId,
+                'secret' => $app_secret ?: $this->appSecret,
                 'grant_type' => 'client_credential'
             ]
         ]);
@@ -70,14 +76,14 @@ abstract class WeChatBase {
         if (json_last_error() === JSON_ERROR_NONE) {
             $result['errcode'] = $result['errcode'] ?? -999999;
 
-            if ($result['errcode'] === -999999 || $result['errcode'] === 0) {
+            if ($result['errcode'] === 0 || $result['errcode'] === -999999) {
                 return $result;
             }
 
             $result['errmsg'] = $result['errmsg'] ?? 'Unknown reason request failed';
 
             throw new WeChatUtilsException(
-                "Request WeChat API failed, error code: {$result['errcode']}, error message: {$result['errmsg']}"
+                "Request WeChat API failed, error code: {$result['errcode']}, error message: {$result['errmsg']}", $result
             );
         }
 

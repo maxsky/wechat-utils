@@ -19,8 +19,6 @@ class OfficialAccount extends WeChatBase {
 
     use WeChatOAMessage, SignPackage;
 
-    private $appId;
-    private $appSecret;
     private $serverToken;
     private $aesKey;
 
@@ -28,10 +26,8 @@ class OfficialAccount extends WeChatBase {
 
     public function __construct(string $app_id,
                                 string $app_secret, ?string $server_token = null, ?string $aes_key = null) {
-        parent::__construct();
+        parent::__construct($app_id, $app_secret);
 
-        $this->appId = $app_id;
-        $this->appSecret = $app_secret;
         $this->serverToken = $server_token;
 
         $this->aesKey = $aes_key ? base64_decode("$aes_key=") : null;
@@ -111,6 +107,8 @@ class OfficialAccount extends WeChatBase {
         ]);
 
         $response = $this->handleResponse($response);
+
+        $this->jsapi_ticket = $response['ticket'];
 
         return $response['ticket'];
     }

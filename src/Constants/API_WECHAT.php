@@ -34,6 +34,7 @@ const WECHAT_OA_UTIL_SEND_TEMPLATE_MESSAGE = 'https://api.weixin.qq.com/cgi-bin/
 
 /** Mini Program */
 const WECHAT_MP_CODE_TO_SESSION = 'https://api.weixin.qq.com/sns/jscode2session';
+const WECHAT_MP_GET_USER_PHONE_NUMBER = 'https://api.weixin.qq.com/wxa/business/getuserphonenumber';
 const WECHAT_MP_GET_WXA_CODE = 'https://api.weixin.qq.com/wxa/getwxacode';
 const WECHAT_MP_GET_WXA_CODE_UNLIMITED = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit';
 const WECHAT_MP_SEND_SUBSCRIBE_MESSAGE = 'https://api.weixin.qq.com/cgi-bin/message/subscribe/send';

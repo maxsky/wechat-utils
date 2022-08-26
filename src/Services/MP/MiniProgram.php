@@ -17,18 +17,10 @@ class MiniProgram extends WeChatBase {
 
     use WeChatMPUtil;
 
-    private $appId;
-    private $appSecret;
-
-    public function __construct(string $app_id, string $app_secret) {
-        parent::__construct();
-
-        $this->appId = $app_id;
-        $this->appSecret = $app_secret;
-    }
-
     /**
      * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
+     *
+     * 通过 code 获取 session_key，用于解密微信用户数据
      *
      * @param string $code
      *
@@ -44,6 +36,33 @@ class MiniProgram extends WeChatBase {
                 'grant_type' => 'authorization_code'
             ]
         ]);
+
+        return $this->handleResponse($response);
+    }
+
+    /**
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/phone-number/getPhoneNumber.html
+     *
+     * 通过 code 获取用户手机号码，注意需设置 Access Token
+     *
+     * @param string $code
+     *
+     * @return array|null
+     * @throws WeChatUtilsException
+     */
+    public function code2PhoneNumber(string $code): ?array {
+        if (!$this->access_token) {
+            throw new WeChatUtilsException('Must set Access Token first.');
+        }
+
+        $response = $this->httpRequest(WECHAT_MP_GET_USER_PHONE_NUMBER, [
+            'query' => [
+                'access_token' => $this->access_token
+            ],
+            'json' => [
+                'code' => $code
+            ]
+        ], 'POST');
 
         return $this->handleResponse($response);
     }
