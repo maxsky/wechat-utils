@@ -83,7 +83,7 @@ abstract class WeChatBase {
             $result['errmsg'] = $result['errmsg'] ?? 'Unknown reason request failed';
 
             throw new WeChatUtilsException(
-                "Request WeChat API failed, error code: {$result['errcode']}, error message: {$result['errmsg']}", $result
+                "Request WeChat API failed, error code: {$result['errcode']}, error message: {$result['errmsg']}"
             );
         }
 
