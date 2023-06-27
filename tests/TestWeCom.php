@@ -43,10 +43,10 @@ class TestWeCom extends TestCase {
         try {
             $result = $this->weCom->verifyURL($echoStr, $msgSignature, $timestamp, $nonce);
         } catch (WeChatUtilsMessageException $e) {
-            $result = false;
+            $result = null;
         }
 
-        $this->assertTrue($result);
+        $this->assertIsString($result);
     }
 
     public function testDecryptUserMessage() {

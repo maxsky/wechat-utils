@@ -21,10 +21,10 @@ trait WeChatComMessage {
      * @param int|string $timestamp
      * @param string     $nonce
      *
-     * @return true
+     * @return string
      * @throws WeChatUtilsMessageException
      */
-    public function verifyURL(string $message, string $msg_signature, $timestamp, string $nonce): bool {
+    public function verifyURL(string $message, string $msg_signature, $timestamp, string $nonce): string {
         if (strlen($this->aesKey) !== 32) { // the original length is 43, but after `base64_decode` is 32
             throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40004]);
         }
@@ -39,6 +39,6 @@ trait WeChatComMessage {
             throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[$ret]);
         }
 
-        return true;
+        return $ret;
     }
 }

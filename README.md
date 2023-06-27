@@ -8,7 +8,7 @@
 
 ## App
 
-App 目前仅完成一个方法用于登录获取用户信息
+App 目前仅完成一个方法用于微信授权登录获取用户信息
 
 ```php
 $app = new \MaxSky\WeChat\Services\App\App();
@@ -21,7 +21,7 @@ $userInfo = $app->getUserInfoFromAuth('auth_access_token', 'open_id');
 
 ### 一般方法
 
-该方法用于微信网页授权登录获取用户信息
+微信网页授权登录获取用户信息
 
 ```php
 $oa = new \MaxSky\WeChat\Services\OA\OfficialAccount('app_id', 'app_secret');
@@ -30,13 +30,13 @@ $oa = new \MaxSky\WeChat\Services\OA\OfficialAccount('app_id', 'app_secret');
 $userInfo = $oa->getUserInfoByAuthCode('js_auth_code');
 ```
 
-### Access Token 方法
+### 依赖 Access Token 的方法
 
-这里展示了已有的需要 Access Token 的一些方法
+一些需要 Access Token 的方法
 
 ```php
-// 该 Token 不同于 auth_access_token，需缓存，建议缓存 7000s 左右，不大于 7200s
-// 这里简单示例从缓存中拿出 Access Token，如果存在只需要调用 setAccessToken 即可，否则重新获取
+// 注意该 Token 不同于 auth_access_token，需自行缓存，建议缓存 7000s 左右，不大于 7200s
+// 这里简单示例从缓存中取出 Access Token 并设置，如果不存在则调用 getAccessToken 进行获取
 // 成功获取时会自动设置到当前对象成员 access_token，即 $oa->access_token，故无需手动 setAccessToken
 if ($accessTokenFromCacheExist) {
     $oa->setAccessToken($accessTokenFromCacheExist);
@@ -45,10 +45,10 @@ if ($accessTokenFromCacheExist) {
     // TODO: 设置到缓存
 }
 
-/** @var array */
+/** @var array UnionID 机制获取用户信息 */
 $userInfo = $oa->getUserInfo('open_id');
 
-// 创建二维码，第二个参数为类型，可用值：QR_SCENE|QR_STR_SCENE|QR_LIMIT_SCENE|QR_LIMIT_STR_SCENE
+// 创建二维码，第二个参数为类型，可用值：QR_SCENE | QR_STR_SCENE | QR_LIMIT_SCENE | QR_LIMIT_STR_SCENE
 // 如果第一个参数为 true，则类型仅可用 QR_LIMIT_SCENE 或 QR_LIMIT_STR_SCENE，反之亦然
 // 第三个参数为场景值，可传入 int|string
 // 第四个参数为过期时间，仅第一个参数为 false 时有效，单位秒，默认 30 天
@@ -81,14 +81,16 @@ if ($jsApiTicketFromCacheExist) {
     $oa->setJsApiTicket($jsApiTicketFromCacheExist);
 } else {
     $jsApiTicket = $oa->getJsApiTicket();
-    // TODO: 设置到
+    // TODO: 设置到缓存
 }
 
-// URL 签名包
+// URL 签名，用于分享等操作
 $signPkg = $oa->getSignPackage('url');
 ```
 
 ### 消息方法
+
+略
 
 ## 小程序
 
@@ -99,7 +101,7 @@ $signPkg = $oa->getSignPackage('url');
 ```php
 $mp = new \MaxSky\WeChat\Services\MP\MicroProgram('app_id', 'app_secret');
 
-$session = $mp->code2Session('js_auth_code');
+$session = $mp->code2Session('code');
 
 /** @var array */
 $userInfo = $mp->decryptUserData($session['session_key'], 'iv_from_request', 'encrypted_data_from_request');
@@ -107,12 +109,21 @@ $userInfo = $mp->decryptUserData($session['session_key'], 'iv_from_request', 'en
 
 ### 获取用户手机号
 
-需要先获取 `Access Token`，这里通过设置
+需要先获取 `Access Token`，同公众号，**注意区分缓存**
 
 ```php
-$mp->getAccessToken(); // 忽略返回值
+if ($mpAccessTokenFromCacheExist) {
+    $mp->setAccessToken($mpAccessTokenFromCacheExist);
+} else {
+    $accessToken = $mp->getAccessToken('app_id', 'app_secret');
+    // TODO: 设置到缓存
+}
 
 $phoneInfo = $mp->code2PhoneNumber('code');
 ```
 
+## 企业微信
 
+### 验证URL有效性
+
+该阶段为企业微信后台设置 **接收消息服务器**、**Token** 以及 **EncodingAESKey** 时使用
