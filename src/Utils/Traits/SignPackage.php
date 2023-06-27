@@ -9,19 +9,21 @@
 
 namespace MaxSky\WeChat\Utils\Traits;
 
-use MaxSky\WeChat\Exceptions\WeChatUtilsException;
+use MaxSky\WeChat\Exceptions\WeChatUtilsGeneralException;
 
 trait SignPackage {
+
+    use RandomUtil;
 
     /**
      * @param string $url
      *
      * @return array
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function getSignPackage(string $url): array {
         if (!$this->jsapi_ticket) {
-            throw new WeChatUtilsException('Must set JsApi Ticket first.');
+            throw new WeChatUtilsGeneralException('Must set JsApi Ticket first.');
         }
 
         $timestamp = time();
@@ -39,7 +41,7 @@ trait SignPackage {
             'timestamp' => $timestamp,
             'url' => $url,
             'signature' => $signature,
-            //'rawString' => $string // must remove in production environment
+            //'rawString' => $string // remove in production environment
         ];
     }
 }

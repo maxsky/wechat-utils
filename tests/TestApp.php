@@ -9,7 +9,7 @@
 
 namespace Tests;
 
-use MaxSky\WeChat\Exceptions\WeChatUtilsException;
+use MaxSky\WeChat\Exceptions\WeChatUtilsGeneralException;
 use MaxSky\WeChat\Services\App\App;
 use PHPUnit\Framework\TestCase;
 
@@ -26,7 +26,7 @@ class TestApp extends TestCase {
     public function testGetUserInfo() {
         try {
             $this->assertIsArray($this->app->getUserInfoFromAuth('test', 'test'));
-        } catch (WeChatUtilsException $e) {
+        } catch (WeChatUtilsGeneralException $e) {
             if ($e->getCode() === 40001) {
                 $this->assertTrue(true);
             }

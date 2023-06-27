@@ -9,7 +9,7 @@
 
 namespace MaxSky\WeChat\Services\MP;
 
-use MaxSky\WeChat\Exceptions\WeChatUtilsException;
+use MaxSky\WeChat\Exceptions\WeChatUtilsGeneralException;
 use MaxSky\WeChat\Services\WeChatBase;
 use MaxSky\WeChat\Utils\Traits\WeChatMPUtil;
 
@@ -20,12 +20,12 @@ class MiniProgram extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
      *
-     * 通过 code 获取 session_key，用于解密微信用户数据
+     * 通过 Code 获取 session_key（会话密钥）
      *
      * @param string $code
      *
      * @return array|null
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function code2Session(string $code): ?array {
         $response = $this->httpRequest(WECHAT_MP_CODE_TO_SESSION, [
@@ -43,16 +43,16 @@ class MiniProgram extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/phone-number/getPhoneNumber.html
      *
-     * 通过 code 获取用户手机号码，注意需设置 Access Token
+     * 通过 Code 获取用户手机号码
      *
      * @param string $code
      *
      * @return array|null
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function code2PhoneNumber(string $code): ?array {
         if (!$this->access_token) {
-            throw new WeChatUtilsException('Must set Access Token first.');
+            throw new WeChatUtilsGeneralException('Must set Access Token first.');
         }
 
         $response = $this->httpRequest(WECHAT_MP_GET_USER_PHONE_NUMBER, [
@@ -70,22 +70,23 @@ class MiniProgram extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.get.html
      *
-     * 有限制获取小程序码
+     * 获取有数量限制的小程序码
      *
-     * @param string $path       最长 128 字节
-     * @param int    $width      二维码宽度，单位 px。最小 280；最大 1280
-     * @param bool   $auto_color 自动配置线条颜色
-     * @param array  $line_color 使用 RGB 设置颜色，auto_color 为 false 时生效
-     * @param bool   $is_hyaline 是否需要透明底色
+     * @param string $path        小程序页面路径，最长 1024 字节
+     * @param int    $width       二维码宽度，单位 px。默认 430，最小 280；最大 1280
+     * @param bool   $auto_color  自动配置线条颜色
+     * @param array  $line_color  使用 RGB 设置颜色，auto_color 为 false 时生效
+     * @param bool   $is_hyaline  是否需要透明底色
+     * @param string $env_version 小程序版本，默认 release 正式版，可选体验版 trial，开发版 develop
      *
      * @return string
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function getWxaCode(string $path, int $width = 430, bool $auto_color = false,
                                array  $line_color = ['r' => 0, 'g' => 0, 'b' => 0],
-                               bool   $is_hyaline = false): string {
+                               bool   $is_hyaline = false, string $env_version = 'release'): string {
         if (!$this->access_token) {
-            throw new WeChatUtilsException('Must set Access Token first.');
+            throw new WeChatUtilsGeneralException('Must set Access Token first.');
         }
 
         $response = $this->httpRequest(WECHAT_MP_GET_WXA_CODE, [
@@ -97,7 +98,8 @@ class MiniProgram extends WeChatBase {
                 'width' => $width,
                 'auto_color' => $auto_color,
                 'line_color' => $line_color,
-                'is_hyaline' => $is_hyaline
+                'is_hyaline' => $is_hyaline,
+                'env_version' => $env_version
             ]
         ], 'POST');
 
@@ -107,23 +109,24 @@ class MiniProgram extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html
      *
-     * 无限制获取小程序码（适用于自定参数）
+     * 获取无数量限制的小程序码（适用于自定义参数，包含场景、类型等）
      *
-     * @param string      $scene      最大 32 个可见字符，只支持数字，大小写英文以及部分特殊字符
-     * @param string|null $page       小程序页面
-     * @param int         $width      二维码宽度，单位 px。最小 280；最大 1280
-     * @param bool        $auto_color 自动配置线条颜色
-     * @param array       $line_color 使用 RGB 设置颜色，auto_color 为 false 时生效
-     * @param bool        $is_hyaline 是否需要透明底色
+     * @param string      $scene       最大 32 个可见字符，只支持数字，大小写英文以及部分特殊字符
+     * @param string|null $page        小程序页面
+     * @param int         $width       二维码宽度，单位 px。默认 430，最小 280；最大 1280
+     * @param bool        $auto_color  自动配置线条颜色
+     * @param array       $line_color  使用 RGB 设置颜色，auto_color 为 false 时生效
+     * @param bool        $is_hyaline  是否需要透明底色
+     * @param string      $env_version 小程序版本，默认 release 正式版，可选体验版 trial，开发版 develop
      *
      * @return string
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function getWxaCodeUnlimited(string $scene, ?string $page = null, int $width = 430, bool $auto_color = false,
                                         array  $line_color = ['r' => 0, 'g' => 0, 'b' => 0],
-                                        bool   $is_hyaline = false): string {
+                                        bool   $is_hyaline = false, string $env_version = 'release'): string {
         if (!$this->access_token) {
-            throw new WeChatUtilsException('Must set Access Token first.');
+            throw new WeChatUtilsGeneralException('Must set Access Token first.');
         }
 
         $response = $this->httpRequest(WECHAT_MP_GET_WXA_CODE_UNLIMITED, [
@@ -136,7 +139,8 @@ class MiniProgram extends WeChatBase {
                 'width' => $width,
                 'auto_color' => $auto_color,
                 'line_color' => $line_color,
-                'is_hyaline' => $is_hyaline
+                'is_hyaline' => $is_hyaline,
+                'env_version' => $env_version
             ]
         ], 'POST');
 
@@ -146,22 +150,25 @@ class MiniProgram extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html
      *
-     * @param string      $open_id
-     * @param string      $template_id
-     * @param array       $data
-     * @param string|null $page
-     * @param string      $miniprogram_state
+     * 发送订阅消息
+     *
+     * @param string      $open_id           接收者
+     * @param string      $template_id       订阅模板 ID
+     * @param array       $data              模板内容
+     * @param string|null $page              跳转页面
+     * @param string      $miniprogram_state 小程序类型，默认 formal 为正式版，developer 开发版，trial 体验版
+     * @param string      $lang              语言类型，默认 zh_CN（简体中文）
      *
      * @return bool
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function sendSubscribeMessage(string  $open_id,
                                          string  $template_id,
                                          array   $data,
                                          ?string $page = null,
-                                         string  $miniprogram_state = 'formal'): bool {
+                                         string  $miniprogram_state = 'formal', string $lang = 'zh_CN'): bool {
         if (!$this->access_token) {
-            throw new WeChatUtilsException('Must set Access Token first.');
+            throw new WeChatUtilsGeneralException('Must set Access Token first.');
         }
 
         $response = $this->httpRequest(WECHAT_MP_SEND_SUBSCRIBE_MESSAGE, [
@@ -173,7 +180,8 @@ class MiniProgram extends WeChatBase {
                 'template_id' => $template_id,
                 'data' => $data,
                 'page' => $page,
-                'miniprogram_state' => $miniprogram_state
+                'miniprogram_state' => $miniprogram_state,
+                'lang' => $lang
             ]
         ], 'POST');
 

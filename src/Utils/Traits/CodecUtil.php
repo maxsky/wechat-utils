@@ -57,7 +57,6 @@ trait CodecUtil {
      * @param string $text
      *
      * @return int|string
-     * @throws Exception
      */
     private function encrypt(string $text) {
         $text = $this->str_random() . pack('N', strlen($text)) . $text . $this->appId;

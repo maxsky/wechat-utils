@@ -10,18 +10,17 @@
 namespace MaxSky\WeChat\Services\Com;
 
 use MaxSky\WeChat\Services\WeChatBase;
-use MaxSky\WeChat\Utils\Traits\SignPackage;
 use MaxSky\WeChat\Utils\Traits\WeChatComMessage;
 
 class WeCom extends WeChatBase {
 
-    use WeChatComMessage, SignPackage;
+    use WeChatComMessage;
 
     private $serverToken;
     private $aesKey;
 
-    public function __construct(string $app_id,
-                                string $app_secret, ?string $server_token = null, ?string $aes_key = null) {
+    public function __construct(string  $app_id,
+                                ?string $app_secret = null, ?string $server_token = null, ?string $aes_key = null) {
         parent::__construct($app_id, $app_secret);
 
         $this->serverToken = $server_token;

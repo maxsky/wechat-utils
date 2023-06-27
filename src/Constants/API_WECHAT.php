@@ -8,7 +8,7 @@
  */
 
 const WECHAT_OA_GET_API_ACCESS_TOKEN = 'https://api.weixin.qq.com/cgi-bin/token';
-const WECHAT_OA_GET_AUTH_ACCESS_TOKEN = 'https://api.weixin.qq.com/sns/oauth2/access_token';
+const WECHAT_OA_GET_AUTH_ACCESS_TOKEN = 'https://api.weixin.qq.com/sns/oauth2/access_token'; // same as App get OpenID and UnionID (if UnionID exist)
 const WECHAT_OA_GET_JSAPI_TICKET = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket';
 const WECHAT_OA_GET_USER_INFO = 'https://api.weixin.qq.com/cgi-bin/user/info';
 

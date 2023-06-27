@@ -10,10 +10,10 @@
 namespace MaxSky\WeChat\Utils\Traits;
 
 use Exception;
-use MaxSky\WeChat\Exceptions\WeChatUtilsException;
+use MaxSky\WeChat\Exceptions\WeChatUtilsMessageException;
 use SimpleXMLElement;
 
-trait SignatureBaseTrait {
+trait WeChatMessageBaseTrait {
 
     use CodecUtil;
 
@@ -22,7 +22,7 @@ trait SignatureBaseTrait {
      *
      * @param string      $signature   签名
      * @param string      $timestamp   10 位时间戳
-     * @param string      $nonce       随机数
+     * @param string      $nonce       随机值
      * @param string|null $encrypt_msg 加密消息
      *
      * @return bool
@@ -41,9 +41,9 @@ trait SignatureBaseTrait {
     }
 
     /**
-     * @param string $encrypt_msg
-     * @param string $timestamp
-     * @param string $nonce
+     * @param string $encrypt_msg 加密消息
+     * @param string $timestamp   10 位时间戳
+     * @param string $nonce       随机值
      *
      * @return string
      */
@@ -56,25 +56,25 @@ trait SignatureBaseTrait {
     }
 
     /**
-     * @param string $reply_message
-     * @param string $timestamp
-     * @param string $nonce
+     * @param string $reply_message 回复消息
+     * @param string $timestamp     10 位时间戳
+     * @param string $nonce         随机值
      *
      * @return string
-     * @throws Exception
+     * @throws WeChatUtilsMessageException
      */
     public function encryptMessage(string $reply_message, string $timestamp, string $nonce): string {
         // encrypt
         $encrypted = $this->encrypt($reply_message);
 
         if (is_int($encrypted)) {
-            return WECHAT_MSG_ERROR_CODE[$encrypted];
+            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[$encrypted]);
         }
 
         $signature = $this->generateSignature($encrypted, $timestamp, $nonce);
 
         if (!$signature) {
-            return WECHAT_MSG_ERROR_CODE[-40001];
+            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40001]);
         }
 
         return sprintf(
@@ -91,39 +91,39 @@ trait SignatureBaseTrait {
      * @param int|string $timestamp
      * @param string     $nonce
      *
-     * @return SimpleXMLElement|string
-     * @throws WeChatUtilsException
+     * @return SimpleXMLElement
+     * @throws WeChatUtilsMessageException
      */
-    public function decryptMessage(string $message, string $msg_signature, $timestamp, string $nonce) {
+    public function decryptMessage(string $message, string $msg_signature, $timestamp, string $nonce): SimpleXMLElement {
         // get message
         try {
             $message = simplexml_load_string($message, 'SimpleXMLElement', LIBXML_COMPACT + LIBXML_NOCDATA);
         } catch (Exception $e) {
-            throw new WeChatUtilsException(WECHAT_MSG_ERROR_CODE[-40002], 0, $e);
+            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40002], 0, $e);
         }
 
         // get encrypt text
         $encrypt = $message->Encrypt->__toString();
 
         if (!$encrypt) {
-            return WECHAT_MSG_ERROR_CODE[-40002];
+            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40002]);
         }
 
         // check sign
         if (!$this->checkSignature($msg_signature, $timestamp, $nonce, $encrypt)) {
-            return WECHAT_MSG_ERROR_CODE[-40001];
+            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40001]);
         }
 
         $decrypted = $this->decrypt($encrypt);
 
         if (is_int($decrypted)) {
-            return WECHAT_MSG_ERROR_CODE[$decrypted];
+            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[$decrypted]);
         }
 
         try {
             return simplexml_load_string($decrypted, 'SimpleXMLElement', LIBXML_COMPACT + LIBXML_NOCDATA);
         } catch (Exception $e) {
-            throw new WeChatUtilsException(WECHAT_MSG_ERROR_CODE[-40002], 0, $e);
+            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40002], 0, $e);
         }
     }
 }

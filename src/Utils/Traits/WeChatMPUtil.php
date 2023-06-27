@@ -9,7 +9,7 @@
 
 namespace MaxSky\WeChat\Utils\Traits;
 
-use MaxSky\WeChat\Exceptions\WeChatUtilsException;
+use MaxSky\WeChat\Exceptions\WeChatUtilsGeneralException;
 
 trait WeChatMPUtil {
 
@@ -19,17 +19,17 @@ trait WeChatMPUtil {
      * @param string $encrypted_data
      *
      * @return array
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function decryptUserData(string $session_key, string $iv, string $encrypted_data): array {
         if (strlen($session_key) !== 24) {
-            throw new WeChatUtilsException(WECHAT_MP_ERROR_CODE[-41001]);
+            throw new WeChatUtilsGeneralException(WECHAT_MP_ERROR_CODE[-41001]);
         }
 
         $aesKey = base64_decode($session_key);
 
         if (strlen($iv) !== 24) {
-            throw new WeChatUtilsException(WECHAT_MP_ERROR_CODE[-41002]);
+            throw new WeChatUtilsGeneralException(WECHAT_MP_ERROR_CODE[-41002]);
         }
 
         $aesIV = base64_decode($iv);
@@ -45,6 +45,6 @@ trait WeChatMPUtil {
             return $data;
         }
 
-        throw new WeChatUtilsException(WECHAT_MP_ERROR_CODE[-41003]);
+        throw new WeChatUtilsGeneralException(WECHAT_MP_ERROR_CODE[-41003]);
     }
 }

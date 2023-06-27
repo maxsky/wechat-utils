@@ -9,7 +9,7 @@
 
 namespace MaxSky\WeChat\Services\OA;
 
-use MaxSky\WeChat\Exceptions\WeChatUtilsException;
+use MaxSky\WeChat\Exceptions\WeChatUtilsGeneralException;
 use MaxSky\WeChat\Services\WeChatBase;
 use MaxSky\WeChat\Utils\Traits\SignPackage;
 use MaxSky\WeChat\Utils\Traits\WeChatOAMessage;
@@ -34,12 +34,15 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
+     * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html#1
      * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html#3
+     *
+     * 通过授权返回 Code 获取用户信息
      *
      * @param string $code
      *
      * @return array
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function getUserInfoByAuthCode(string $code): array {
         $response = $this->httpRequest(WECHAT_OA_GET_AUTH_ACCESS_TOKEN, [
@@ -67,21 +70,24 @@ class OfficialAccount extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId
      *
+     * 获取用户基本信息（UnionID 机制）
+     *
      * @param string $open_id
+     * @param string $lang
      *
      * @return array
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
-    public function getUserInfo(string $open_id): array {
+    public function getUserInfo(string $open_id, string $lang = 'zh_CN'): array {
         if (!$this->access_token) {
-            throw new WeChatUtilsException('Must set Access Token first.');
+            throw new WeChatUtilsGeneralException('Must set Access Token first.');
         }
 
         $response = $this->httpRequest(WECHAT_OA_GET_USER_INFO, [
             'query' => [
                 'access_token' => $this->access_token,
                 'openid' => $open_id,
-                'lang' => 'zh_CN'
+                'lang' => $lang
             ]
         ]);
 
@@ -91,12 +97,14 @@ class OfficialAccount extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#54
      *
+     * 通过 Access Token 获取 JS API Ticket
+     *
      * @return string
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function getJsApiTicket(): string {
         if (!$this->access_token) {
-            throw new WeChatUtilsException('Must set Access Token first.');
+            throw new WeChatUtilsGeneralException('Must set Access Token first.');
         }
 
         $response = $this->httpRequest(WECHAT_OA_GET_JSAPI_TICKET, [
@@ -114,6 +122,8 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
+     * 设置对象 JS API Ticket，一般用于取出已缓存的 JS API Ticket 进行设置
+     *
      * @param string $jsapi_ticket
      *
      * @return OfficialAccount
@@ -127,17 +137,27 @@ class OfficialAccount extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html#5
      *
-     * @param string $open_id
-     * @param string $template_id
-     * @param array  $data
-     * @param string $url
+     * 发送模板消息
+     *
+     * @param string      $open_id       接收者
+     * @param string      $template_id   模板 ID
+     * @param array       $data          模板数据
+     * @param string      $url           跳转链接
+     * @param string|null $client_msg_id 防重入 ID
+     * @param array       $mp_data       小程序数据集
      *
      * @return bool
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
-    public function sendTemplateMessage(string $open_id, string $template_id, array $data, string $url = ''): bool {
+    public function sendTemplateMessage(string  $open_id, string $template_id, array $data, string $url = '',
+                                        ?string $client_msg_id = null,
+                                        array   $mp_data = []): bool {
         if (!$this->access_token) {
-            throw new WeChatUtilsException('Must set Access Token first.');
+            throw new WeChatUtilsGeneralException('Must set Access Token first.');
+        }
+
+        if ($mp_data && !($mp_data['appid'] ?? null)) {
+            throw new WeChatUtilsGeneralException('MiniProgram AppID not set.');
         }
 
         $response = $this->httpRequest(WECHAT_OA_UTIL_SEND_TEMPLATE_MESSAGE, [
@@ -145,12 +165,13 @@ class OfficialAccount extends WeChatBase {
                 'access_token' => $this->access_token
             ],
             'json' => [
-                'touser' => $open_id,
-                'template_id' => $template_id,
-                'data' => $data,
-                'url' => $url,
-                //'topcolor' => '#FF0000'
-            ]
+                    'touser' => $open_id,
+                    'template_id' => $template_id,
+                    'data' => $data,
+                    'url' => $url,
+                    'client_msg_id' => $client_msg_id,
+                    //'topcolor' => '#FF0000'
+                ] + $mp_data
         ]);
 
         return (bool)$this->handleResponse($response);
@@ -159,30 +180,32 @@ class OfficialAccount extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html
      *
-     * @param bool       $limit          forever
-     * @param string     $action_name    QrCode type
-     * @param int|string $scene_value
-     * @param int        $expire_seconds default：2592000s, 30 days
+     * 生成带参二维码
+     *
+     * @param bool       $limit          是否生成永久二维码
+     * @param string     $action_name    可选值：QR_SCENE | QR_STR_SCENE | QR_LIMIT_SCENE | QR_LIMIT_STR_SCENE
+     * @param int|string $scene_value    场景值
+     * @param int        $expire_seconds 过期时间，默认 2592000 秒，即 30 天。仅临时二维码有效（$limit = false）
      *
      * @return array
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function createQrcode(bool $limit, string $action_name, $scene_value, int $expire_seconds = 2592000): array {
         if (!$this->access_token) {
-            throw new WeChatUtilsException('Must set Access Token first.');
+            throw new WeChatUtilsGeneralException('Must set Access Token first.');
         }
 
         if (($limit && !in_array($action_name, WECHAT_SCENE_LIMIT))
             || (!$limit && !in_array($action_name, WECHAT_SCENE))) {
-            throw new WeChatUtilsException('场景对应二维码类型错误');
+            throw new WeChatUtilsGeneralException('场景对应二维码类型错误');
         }
 
-        if (is_string(WECHAT_SCENE_TYPE[$action_name])) {
+        if (in_array($action_name, WECHAT_SCENE_LIMIT)) {
             $scene = ['scene_str' => $scene_value];
-        } elseif (is_int(WECHAT_SCENE_TYPE[$action_name])) {
+        } elseif (in_array($action_name, WECHAT_SCENE)) {
             $scene = ['scene_id' => $scene_value];
         } else {
-            throw new WeChatUtilsException('场景对应场景值数据类型错误');
+            throw new WeChatUtilsGeneralException('场景对应场景值数据类型错误');
         }
 
         $params = [
@@ -193,6 +216,10 @@ class OfficialAccount extends WeChatBase {
         ];
 
         if (!$limit) {
+            if ($expire_seconds <= 0) {
+                $expire_seconds = 60;
+            }
+
             $params['expire_seconds'] = $expire_seconds;
         }
 
@@ -209,10 +236,12 @@ class OfficialAccount extends WeChatBase {
     /**
      * @url https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html
      *
+     * 通过 Ticket 换取二维码
+     *
      * @param string $ticket
      *
      * @return StreamInterface
-     * @throws WeChatUtilsException
+     * @throws WeChatUtilsGeneralException
      */
     public function getQrcode(string $ticket): StreamInterface {
         return $this->httpRequest(WECHAT_OA_UTIL_SHOW_QRCODE, [
