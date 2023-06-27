@@ -13,7 +13,7 @@ use MaxSky\WeChat\Exceptions\WeChatUtilsException;
 use MaxSky\WeChat\Services\OA\OfficialAccount;
 use PHPUnit\Framework\TestCase;
 
-class TestOA extends TestCase {
+class TestOfficialAccount extends TestCase {
 
     private $oa;
 

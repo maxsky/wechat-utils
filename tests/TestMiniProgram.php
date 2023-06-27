@@ -11,6 +11,6 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class TestMP extends TestCase {
+class TestMiniProgram extends TestCase {
 
 }

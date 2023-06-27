@@ -79,30 +79,34 @@ trait CodecUtil {
      * @return int|string
      */
     private function decrypt(string $encrypted) {
-        $iv = substr($this->aesKey, 0, 16);
+        try {
+            $iv = substr($this->aesKey, 0, 16);
 
-        // decrypt
-        $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $this->aesKey, OPENSSL_ZERO_PADDING, $iv);
+            // decrypt
+            $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $this->aesKey, OPENSSL_ZERO_PADDING, $iv);
 
-        if (!$decrypted) {
-            return -40007;
+            if (!$decrypted) {
+                return -40007;
+            }
+
+            $result = $this->decode($decrypted);
+
+            if (strlen($result) < 16) {
+                return '';
+            }
+
+            $content = substr($result, 16, strlen($result));
+            $lenList = unpack('N', substr($content, 0, 4));
+
+            $lenXML = $lenList[1];
+
+            $fromAppId = substr($content, $lenXML + 4);
+        } catch (Exception $e) {
+            return -40008;
         }
-
-        $result = $this->decode($decrypted);
-
-        if (strlen($result) < 16) {
-            return '';
-        }
-
-        $content = substr($result, 16, strlen($result));
-        $lenList = unpack('N', substr($content, 0, 4));
-
-        $lenXML = $lenList[1];
-
-        $fromAppId = substr($content, $lenXML + 4);
 
         if ($fromAppId !== $this->appId) {
-            return -40001;
+            return -40005;
         }
 
         return substr($content, 4, $lenXML);

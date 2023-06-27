@@ -9,10 +9,10 @@
 
 const WECHAT_MSG_ERROR_CODE = [
     -40001 => 'Signature invalid',
-    -40002 => 'XML analysis failed',
+    -40002 => 'XML parse failed',
     -40003 => 'Generate signature failed',
     -40004 => 'EncodingAESKey error',
-    -40005 => 'AppID invalid',
+    -40005 => 'AppID/ReceiveID invalid', // ReceiveID is WeCom AppID
     -40006 => 'AES encrypt failed',
     -40007 => 'AES decrypt failed',
     -40008 => 'Buffer invalid',
