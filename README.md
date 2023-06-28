@@ -127,3 +127,11 @@ $phoneInfo = $mp->code2PhoneNumber('code');
 ### 验证URL有效性
 
 该阶段为企业微信后台设置 **接收消息服务器**、**Token** 以及 **EncodingAESKey** 时使用
+
+```php
+$weCom = new \MaxSky\WeChat\Services\Com\WeCom();
+
+$decrypted = $weCom->verifyURL($echostr, $msg_signature, $timestamp, string $nonce);
+
+return $decrypted; // 将解密内容直接响应即可
+```
