@@ -74,7 +74,7 @@ trait WeChatMessageBaseTrait {
         $signature = $this->generateSignature($encrypted, $timestamp, $nonce);
 
         if (!$signature) {
-            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40001]);
+            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40003]);
         }
 
         return sprintf(
