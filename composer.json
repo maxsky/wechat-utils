@@ -1,6 +1,6 @@
 {
     "name": "maxsky/wechat-utils",
-    "description": "For WeChat OfficialAccount and MiniProgram",
+    "description": "A simply PHP Composer lib For WeChat OfficialAccount/MiniProgram/App/WeCom",
     "type": "library",
     "license": "MIT",
     "authors": [

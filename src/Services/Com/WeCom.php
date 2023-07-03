@@ -30,6 +30,8 @@ class WeCom extends WeChatBase {
     }
 
     /**
+     * @url https://developer.work.weixin.qq.com/document/10013#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E8%8E%B7%E5%8F%96access-token
+     *
      * @param string|null $app_id
      * @param string|null $app_secret
      *
