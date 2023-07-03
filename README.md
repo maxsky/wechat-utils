@@ -135,3 +135,23 @@ $decrypted = $weCom->verifyURL($echostr, $msg_signature, $timestamp, string $non
 
 return $decrypted; // 将解密内容直接响应即可
 ```
+
+### 解密消息
+
+```php
+$decrypted = $weCom->decryptMessage($encryptXMLMessage, $msg_signature, $timestamp, $nonce);
+```
+
+### 获取客户详情
+
+需要先获取 `Access Token`
+
+```php
+if ($weComAccessTokenFromCacheExist) {
+    $weCom->setAccessToken($weComAccessTokenFromCacheExist);
+} else {
+    $accessToken = $weCom->getAccessToken('corp_id', 'app_secret');
+}
+
+$externalUserInfo = $weCom->getExternalUserInfo('external_userid_from_decrypted_msg');
+```

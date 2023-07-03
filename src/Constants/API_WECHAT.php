@@ -46,3 +46,7 @@ const WECHAT_MP_OCR_DRIVER_LICENSE = 'https://api.weixin.qq.com/cv/ocr/drivingli
 const WECHAT_MP_OCR_ID_CARD = 'https://api.weixin.qq.com/cv/ocr/idcard';
 const WECHAT_MP_OCR_PRINTED_TEXT = 'https://api.weixin.qq.com/cv/ocr/comm';
 const WECHAT_MP_OCR_VEHICLE_LICENSE = 'https://api.weixin.qq.com/cv/ocr/driving';
+
+/** WeCom */
+const WECHAT_COM_GET_API_ACCESS_TOKEN = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken';
+const WECHAT_COM_GET_USER_INFO = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get';
