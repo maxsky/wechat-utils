@@ -124,7 +124,7 @@ $phoneInfo = $mp->code2PhoneNumber('code');
 
 ## 企业微信
 
-### 验证URL有效性
+### 验证 URL 有效性
 
 该阶段为企业微信后台设置 **接收消息服务器**、**Token** 以及 **EncodingAESKey** 时使用
 
