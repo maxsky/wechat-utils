@@ -48,5 +48,13 @@ const WECHAT_MP_OCR_PRINTED_TEXT = 'https://api.weixin.qq.com/cv/ocr/comm';
 const WECHAT_MP_OCR_VEHICLE_LICENSE = 'https://api.weixin.qq.com/cv/ocr/driving';
 
 /** WeCom */
+const WECHAT_COM_GET_DEPARTMENT_ID_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/department/list';
+const WECHAT_COM_GET_DEPARTMENT_USER_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/user/simplelist';
+const WECHAT_COM_GET_USER_ID_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/user/list_id';
+const WECHAT_COM_GET_USER = 'https://qyapi.weixin.qq.com/cgi-bin/user/get';
+const WECHAT_COM_GET_CONTACT_WAY_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list_contact_way';
+const WECHAT_COM_ADD_CONTACT_WAY = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_contact_way';
+const WECHAT_COM_UPDATE_CONTACT_WAY = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/update_contact_way';
+const WECHAT_COM_DELETE_CONTACT_WAY = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/del_contact_way';
 const WECHAT_COM_GET_API_ACCESS_TOKEN = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken';
 const WECHAT_COM_GET_USER_INFO = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get';

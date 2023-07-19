@@ -79,9 +79,7 @@ class OfficialAccount extends WeChatBase {
      * @throws WeChatUtilsGeneralException
      */
     public function getUserInfo(string $open_id, string $lang = 'zh_CN'): array {
-        if (!$this->access_token) {
-            throw new WeChatUtilsGeneralException('Must set Access Token first.');
-        }
+        $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_OA_GET_USER_INFO, [
             'query' => [
@@ -103,9 +101,7 @@ class OfficialAccount extends WeChatBase {
      * @throws WeChatUtilsGeneralException
      */
     public function getJsApiTicket(): string {
-        if (!$this->access_token) {
-            throw new WeChatUtilsGeneralException('Must set Access Token first.');
-        }
+        $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_OA_GET_JSAPI_TICKET, [
             'query' => [
@@ -152,9 +148,7 @@ class OfficialAccount extends WeChatBase {
     public function sendTemplateMessage(string  $open_id, string $template_id, array $data, string $url = '',
                                         ?string $client_msg_id = null,
                                         array   $mp_data = []): bool {
-        if (!$this->access_token) {
-            throw new WeChatUtilsGeneralException('Must set Access Token first.');
-        }
+        $this->issetAccessToken();
 
         if ($mp_data && !($mp_data['appid'] ?? null)) {
             throw new WeChatUtilsGeneralException('MiniProgram AppID not set.');
@@ -191,9 +185,7 @@ class OfficialAccount extends WeChatBase {
      * @throws WeChatUtilsGeneralException
      */
     public function createQrcode(bool $limit, string $action_name, $scene_value, int $expire_seconds = 2592000): array {
-        if (!$this->access_token) {
-            throw new WeChatUtilsGeneralException('Must set Access Token first.');
-        }
+        $this->issetAccessToken();
 
         if (($limit && !in_array($action_name, WECHAT_SCENE_LIMIT))
             || (!$limit && !in_array($action_name, WECHAT_SCENE))) {

@@ -51,9 +51,7 @@ class MiniProgram extends WeChatBase {
      * @throws WeChatUtilsGeneralException
      */
     public function code2PhoneNumber(string $code): ?array {
-        if (!$this->access_token) {
-            throw new WeChatUtilsGeneralException('Must set Access Token first.');
-        }
+        $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_MP_GET_USER_PHONE_NUMBER, [
             'query' => [
@@ -85,9 +83,7 @@ class MiniProgram extends WeChatBase {
     public function getWxaCode(string $path, int $width = 430, bool $auto_color = false,
                                array  $line_color = ['r' => 0, 'g' => 0, 'b' => 0],
                                bool   $is_hyaline = false, string $env_version = 'release'): string {
-        if (!$this->access_token) {
-            throw new WeChatUtilsGeneralException('Must set Access Token first.');
-        }
+        $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_MP_GET_WXA_CODE, [
             'query' => [
@@ -125,9 +121,7 @@ class MiniProgram extends WeChatBase {
     public function getWxaCodeUnlimited(string $scene, ?string $page = null, int $width = 430, bool $auto_color = false,
                                         array  $line_color = ['r' => 0, 'g' => 0, 'b' => 0],
                                         bool   $is_hyaline = false, string $env_version = 'release'): string {
-        if (!$this->access_token) {
-            throw new WeChatUtilsGeneralException('Must set Access Token first.');
-        }
+        $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_MP_GET_WXA_CODE_UNLIMITED, [
             'query' => [
@@ -167,9 +161,7 @@ class MiniProgram extends WeChatBase {
                                          array   $data,
                                          ?string $page = null,
                                          string  $miniprogram_state = 'formal', string $lang = 'zh_CN'): bool {
-        if (!$this->access_token) {
-            throw new WeChatUtilsGeneralException('Must set Access Token first.');
-        }
+        $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_MP_SEND_SUBSCRIBE_MESSAGE, [
             'query' => [

@@ -71,6 +71,16 @@ abstract class WeChatBase {
     }
 
     /**
+     * @return void
+     * @throws WeChatUtilsGeneralException
+     */
+    protected function issetAccessToken() {
+        if (!$this->access_token) {
+            throw new WeChatUtilsGeneralException('Must set Access Token first.');
+        }
+    }
+
+    /**
      * @param StreamInterface $response
      *
      * @return array|string

@@ -18,7 +18,7 @@ use SimpleXMLElement;
 class TestWeCom extends TestCase {
 
     // All params form official sample
-    private $corpId = 'wx5823bf96d3bd56c7'; // same as WeChat AppID
+    private $corpId = 'wx5823bf96d3bd56c7'; // same as AppID of WeChat
     private $token = 'QDG6eK';
     private $encodingAesKey = 'jWmYm7qr5nMoAUwZRjGtBxmz3KA1tkAj3ykkR6q2B2C';
 
