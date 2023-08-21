@@ -63,9 +63,7 @@ $data = \MaxSky\WeChat\Utils\OATemplateMessage::constructTemplateMessage([
     'keyword1', // 模板消息关键字段1
     'keyword2', // 模板消息关键字段2
     'remark'
-], [
-    '对应 first 内容', '对应 keyword1 内容', '对应 keyword2 内容', '对应 remark 内容'
-]);
+], '对应 first 内容', '对应 keyword1 内容', '对应 keyword2 内容', '对应 remark 内容');
 
 /** @var bool 发送模板消息 */
 $result = $oa->sendTemplateMessage('open_id', 'template_id', $data, 'url');
