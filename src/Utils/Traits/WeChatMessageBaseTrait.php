@@ -84,6 +84,21 @@ trait WeChatMessageBaseTrait {
     }
 
     /**
+     * @param string $message
+     *
+     * @return SimpleXMLElement
+     * @throws WeChatUtilsMessageException
+     */
+    public function parseMessage(string $message): SimpleXMLElement {
+        // get message
+        try {
+            return simplexml_load_string($message, 'SimpleXMLElement', LIBXML_COMPACT + LIBXML_NOCDATA);
+        } catch (Exception $e) {
+            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40002], 0, $e);
+        }
+    }
+
+    /**
      * 消息解密
      *
      * @param string     $message
@@ -95,12 +110,7 @@ trait WeChatMessageBaseTrait {
      * @throws WeChatUtilsMessageException
      */
     public function decryptMessage(string $message, string $msg_signature, $timestamp, string $nonce): SimpleXMLElement {
-        // get message
-        try {
-            $message = simplexml_load_string($message, 'SimpleXMLElement', LIBXML_COMPACT + LIBXML_NOCDATA);
-        } catch (Exception $e) {
-            throw new WeChatUtilsMessageException(WECHAT_MSG_ERROR_CODE[-40002], 0, $e);
-        }
+        $message = $this->parseMessage($message);
 
         // get encrypt text
         $encrypt = $message->Encrypt->__toString();
