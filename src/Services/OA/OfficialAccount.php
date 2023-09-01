@@ -166,7 +166,7 @@ class OfficialAccount extends WeChatBase {
                     'client_msg_id' => $client_msg_id,
                     //'topcolor' => '#FF0000'
                 ] + $mp_data
-        ]);
+        ], 'POST');
 
         return (bool)$this->handleResponse($response);
     }
