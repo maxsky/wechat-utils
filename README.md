@@ -136,8 +136,22 @@ return $decrypted; // 将解密内容直接响应即可
 
 ### 解密消息
 
+第一步验证签名
+
 ```php
-$decrypted = $weCom->decryptMessage($encryptXMLMessage, $msg_signature, $timestamp, $nonce);
+// 获取请求内容 XML
+$message = $request->getContent();
+
+$parsed = $this->weCom->parseMessage($message);
+
+// 返回 bool
+$weCom->checkSignature($msg_signature, $timestamp, $nonce, $parsed->Encrypt->__toString());
+```
+
+解密
+
+```php
+$decrypted = $weCom->decryptMessage($message, $msg_signature, $timestamp, $nonce);
 ```
 
 ### 获取客户详情
