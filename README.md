@@ -129,9 +129,8 @@ $phoneInfo = $mp->code2PhoneNumber('code');
 ```php
 $weCom = new \MaxSky\WeChat\Services\Com\WeCom();
 
-$decrypted = $weCom->verifyURL($echostr, $msg_signature, $timestamp, string $nonce);
-
-return $decrypted; // 将解密内容直接响应即可
+// 将验证结果直接响应即可
+return $weCom->verifyURL($echostr, $msg_signature, $timestamp, string $nonce);
 ```
 
 ### 解密消息
