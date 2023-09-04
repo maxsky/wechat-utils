@@ -135,40 +135,63 @@ class WeCom extends WeChatBase {
     }
 
     /**
-     * @url https://developer.work.weixin.qq.com/document/path/92228#%E8%8E%B7%E5%8F%96%E4%BC%81%E4%B8%9A%E5%B7%B2%E9%85%8D%E7%BD%AE%E7%9A%84%E3%80%8C%E8%81%94%E7%B3%BB%E6%88%91%E3%80%8D%E5%88%97%E8%A1%A8
+     * @url https://developer.work.weixin.qq.com/document/path/92228#%E8%8E%B7%E5%8F%96%E4%BC%81%E4%B8%9A%E5%B7%B2%E9%85%8D%E7%BD%AE%E7%9A%84%E3%80%8C%E8%81%94%E7%B3%BB%E6%88%91%E3%80%8D%E6%96%B9%E5%BC%8F
      *
-     * @param int|null    $start_time
-     * @param int|null    $end_time
-     * @param string|null $cursor
-     * @param int         $limit
+     * @param string $config_id
      *
      * @return array|string
      * @throws WeChatUtilsGeneralException
      */
-    public function getContactWayList(?int    $start_time = null, ?int $end_time = null,
-                                      ?string $cursor = null, int $limit = 15) {
+    public function getContactWay(string $config_id) {
         $this->issetAccessToken();
 
-        $timestamp = time();
+        $response = $this->httpRequest(WECHAT_COM_GET_CONTACT_WAY, [
+            'query' => [
+                'access_token' => $this->access_token
+            ],
+            'json' => [
+                'config_id' => $config_id
+            ]
+        ], 'POST');
 
-        if (!$end_time) {
-            $end_time = $timestamp;
+        return $this->handleResponse($response);
+    }
+
+    /**
+     * @url https://developer.work.weixin.qq.com/document/path/92228#%E8%8E%B7%E5%8F%96%E4%BC%81%E4%B8%9A%E5%B7%B2%E9%85%8D%E7%BD%AE%E7%9A%84%E3%80%8C%E8%81%94%E7%B3%BB%E6%88%91%E3%80%8D%E5%88%97%E8%A1%A8
+     *
+     * @param int|null    $start_time
+     * @param int|null    $end_time
+     * @param string|null $cursor from `next_cursor` field in previous page response
+     * @param int         $limit  default 100, max 1000
+     *
+     * @return array|string
+     * @throws WeChatUtilsGeneralException
+     */
+    public function getContactWayList(?int $start_time = null, ?int $end_time = null, ?string $cursor = null, int $limit = 100) {
+        $this->issetAccessToken();
+
+        $params = [
+            'limit' => $limit
+        ];
+
+        if ($start_time) {
+            $params['start_time'] = $start_time;
         }
 
-        if (!$start_time) {
-            $start_time = $timestamp - (90 * 86400); // 90 days ago
+        if ($end_time) {
+            $params['end_time'] = $end_time;
+        }
+
+        if ($cursor) {
+            $params['cursor'] = $cursor;
         }
 
         $response = $this->httpRequest(WECHAT_COM_GET_CONTACT_WAY_LIST, [
             'query' => [
                 'access_token' => $this->access_token
             ],
-            'json' => [
-                'start_time' => $start_time,
-                'end_time' => $end_time,
-                'cursor' => $cursor,
-                'limit' => $limit
-            ]
+            'json' => $params
         ], 'POST');
 
         return $this->handleResponse($response);

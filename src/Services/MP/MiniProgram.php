@@ -18,7 +18,7 @@ class MiniProgram extends WeChatBase {
     use WeChatMPUtil;
 
     /**
-     * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-login/code2Session.html
      *
      * 通过 Code 获取 session_key（会话密钥）
      *
@@ -66,7 +66,7 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.get.html
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qrcode-link/qr-code/getQRCode.html
      *
      * 获取有数量限制的小程序码
      *
@@ -103,12 +103,13 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qrcode-link/qr-code/getUnlimitedQRCode.html
      *
      * 获取无数量限制的小程序码（适用于自定义参数，包含场景、类型等）
      *
      * @param string      $scene       最大 32 个可见字符，只支持数字，大小写英文以及部分特殊字符
      * @param string|null $page        小程序页面
+     * @param bool        $check_path  检查 page 是否存在，默认 true
      * @param int         $width       二维码宽度，单位 px。默认 430，最小 280；最大 1280
      * @param bool        $auto_color  自动配置线条颜色
      * @param array       $line_color  使用 RGB 设置颜色，auto_color 为 false 时生效
@@ -118,8 +119,8 @@ class MiniProgram extends WeChatBase {
      * @return string
      * @throws WeChatUtilsGeneralException
      */
-    public function getWxaCodeUnlimited(string $scene, ?string $page = null, int $width = 430, bool $auto_color = false,
-                                        array  $line_color = ['r' => 0, 'g' => 0, 'b' => 0],
+    public function getWxaCodeUnlimited(string $scene, ?string $page = null, bool $check_path = true, int $width = 430,
+                                        bool   $auto_color = false, array $line_color = ['r' => 0, 'g' => 0, 'b' => 0],
                                         bool   $is_hyaline = false, string $env_version = 'release'): string {
         $this->issetAccessToken();
 
@@ -130,6 +131,7 @@ class MiniProgram extends WeChatBase {
             'json' => [
                 'scene' => $scene,
                 'page' => $page,
+                'check_path' => $check_path,
                 'width' => $width,
                 'auto_color' => $auto_color,
                 'line_color' => $line_color,
@@ -142,7 +144,7 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/sendMessage.html
      *
      * 发送订阅消息
      *

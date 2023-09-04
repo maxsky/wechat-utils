@@ -153,3 +153,10 @@ if ($weComAccessTokenFromCacheExist) {
 
 $externalUserInfo = $weCom->getExternalUserInfo('external_userid_from_decrypted_msg');
 ```
+
+### 客户联系「联系我」管理
+
+文档链接：[https://developer.work.weixin.qq.com/document/path/92228](https://developer.work.weixin.qq.com/document/path/92228)
+
+`WeCom` 实例化后，可使用 `getContactWay`、`getContactWayList`、`addContactWay`、
+`updateContactWay`、`deleteContactWay` 方法进行管理

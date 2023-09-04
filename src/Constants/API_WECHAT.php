@@ -52,6 +52,7 @@ const WECHAT_COM_GET_DEPARTMENT_ID_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/d
 const WECHAT_COM_GET_DEPARTMENT_USER_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/user/simplelist';
 const WECHAT_COM_GET_USER_ID_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/user/list_id';
 const WECHAT_COM_GET_USER = 'https://qyapi.weixin.qq.com/cgi-bin/user/get';
+const WECHAT_COM_GET_CONTACT_WAY = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/get_contact_way';
 const WECHAT_COM_GET_CONTACT_WAY_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/list_contact_way';
 const WECHAT_COM_ADD_CONTACT_WAY = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/add_contact_way';
 const WECHAT_COM_UPDATE_CONTACT_WAY = 'https://qyapi.weixin.qq.com/cgi-bin/externalcontact/update_contact_way';
