@@ -142,7 +142,7 @@ return $decrypted; // 将解密内容直接响应即可
 // 获取请求内容 XML
 $message = $request->getContent();
 
-$parsed = $this->weCom->parseMessage($message);
+$parsed = $weCom->parseMessage($message);
 
 // 返回 bool
 $weCom->checkSignature($msg_signature, $timestamp, $nonce, $parsed->Encrypt->__toString());
