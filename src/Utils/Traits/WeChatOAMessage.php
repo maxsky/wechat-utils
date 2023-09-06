@@ -11,6 +11,8 @@ namespace MaxSky\WeChat\Utils\Traits;
 
 trait WeChatOAMessage {
 
+    use WeChatMessageBaseTrait;
+
     /**
      * @param string $open_id
      * @param string $to
