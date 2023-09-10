@@ -2,6 +2,6 @@
     <ToUserName><![CDATA[%s]]></ToUserName>
     <FromUserName><![CDATA[%s]]></FromUserName>
     <CreateTime>%d</CreateTime>
-    <MsgType><![CDATA[$s]]></MsgType>
+    <MsgType><![CDATA[%s]]></MsgType>
     <Content><![CDATA[%s]]></Content>
 </xml>
