@@ -54,12 +54,14 @@ class WeCom extends WeChatBase {
     }
 
     /**
+     * @url https://developer.work.weixin.qq.com/document/path/90208
+     *
      * @param int|null $id
      *
-     * @return array|string
+     * @return array
      * @throws WeChatUtilsGeneralException
      */
-    public function getDepartmentIdList(?int $id = null) {
+    public function getDepartmentIdList(?int $id = null): array {
         $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_COM_GET_DEPARTMENT_ID_LIST, [
@@ -73,11 +75,14 @@ class WeCom extends WeChatBase {
     }
 
     /**
+     * @url https://developer.work.weixin.qq.com/document/path/90200
+     *
      * @param int $department_id
      *
+     * @return array
      * @throws WeChatUtilsGeneralException
      */
-    public function getDepartmentUserList(int $department_id) {
+    public function getDepartmentUserList(int $department_id): array {
         $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_COM_GET_DEPARTMENT_USER_LIST, [
@@ -86,6 +91,8 @@ class WeCom extends WeChatBase {
                 'department_id' => $department_id
             ]
         ]);
+
+        return $this->handleResponse($response);
     }
 
     /**
@@ -94,10 +101,10 @@ class WeCom extends WeChatBase {
      * @param string|null $cursor
      * @param int         $limit
      *
-     * @return array|string
+     * @return array
      * @throws WeChatUtilsGeneralException
      */
-    public function getUserIdList(?string $cursor = null, int $limit = 15) {
+    public function getUserIdList(?string $cursor = null, int $limit = 15): array {
         $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_COM_GET_USER_ID_LIST, [
@@ -118,10 +125,10 @@ class WeCom extends WeChatBase {
      *
      * @param string $id
      *
-     * @return array|string
+     * @return array
      * @throws WeChatUtilsGeneralException
      */
-    public function getUser(string $id) {
+    public function getUser(string $id): array {
         $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_COM_GET_USER, [
@@ -139,10 +146,10 @@ class WeCom extends WeChatBase {
      *
      * @param string $config_id
      *
-     * @return array|string
+     * @return array
      * @throws WeChatUtilsGeneralException
      */
-    public function getContactWay(string $config_id) {
+    public function getContactWay(string $config_id): array {
         $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_COM_GET_CONTACT_WAY, [
@@ -165,10 +172,11 @@ class WeCom extends WeChatBase {
      * @param string|null $cursor from `next_cursor` field in previous page response
      * @param int         $limit  default 100, max 1000
      *
-     * @return array|string
+     * @return array
      * @throws WeChatUtilsGeneralException
      */
-    public function getContactWayList(?int $start_time = null, ?int $end_time = null, ?string $cursor = null, int $limit = 100) {
+    public function getContactWayList(?int $start_time = null,
+                                      ?int $end_time = null, ?string $cursor = null, int $limit = 100): array {
         $this->issetAccessToken();
 
         $params = [
@@ -208,11 +216,11 @@ class WeCom extends WeChatBase {
      * @param int    $chat_expires_in default value is 86400 seconds, 1 day
      * @param array  $options         other parameters
      *
-     * @return array|string
+     * @return array
      * @throws WeChatUtilsGeneralException
      */
     public function addContactWay(int $type, int $scene, string $state = '', bool $is_temp = false,
-                                  int $expires_in = 604800, int $chat_expires_in = 86400, array $options = []) {
+                                  int $expires_in = 604800, int $chat_expires_in = 86400, array $options = []): array {
         $this->issetAccessToken();
 
         $params = array_merge([
@@ -300,10 +308,10 @@ class WeCom extends WeChatBase {
      * @param string      $external_userid
      * @param string|null $cursor
      *
-     * @return array|string
+     * @return array
      * @throws WeChatUtilsGeneralException
      */
-    public function getExternalUserInfo(string $external_userid, ?string $cursor = null) {
+    public function getExternalUserInfo(string $external_userid, ?string $cursor = null): array {
         $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_COM_GET_USER_INFO, [
