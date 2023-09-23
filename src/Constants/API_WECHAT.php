@@ -49,6 +49,8 @@ const WECHAT_MP_OCR_VEHICLE_LICENSE = 'https://api.weixin.qq.com/cv/ocr/driving'
 
 /** WeCom */
 const WECHAT_COM_GET_DEPARTMENT_ID_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/department/list';
+const WECHAT_COM_GET_DEPARTMENT_SUB_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/department/simplelist';
+const WECHAT_COM_GET_DEPARTMENT = 'https://qyapi.weixin.qq.com/cgi-bin/department/get';
 const WECHAT_COM_GET_DEPARTMENT_USER_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/user/simplelist';
 const WECHAT_COM_GET_USER_ID_LIST = 'https://qyapi.weixin.qq.com/cgi-bin/user/list_id';
 const WECHAT_COM_GET_USER = 'https://qyapi.weixin.qq.com/cgi-bin/user/get';

@@ -23,9 +23,13 @@ abstract class WeChatBase {
 
     protected $httpClient;
 
-    public function __construct(?string $app_id = null, ?string $app_secret = null) {
+    protected $debug;
+
+    public function __construct(?string $app_id = null, ?string $app_secret = null, bool $debug = false) {
         $this->appId = $app_id;
         $this->appSecret = $app_secret;
+
+        $this->debug = $debug;
 
         $this->httpClient = new Client();
     }
@@ -92,7 +96,7 @@ abstract class WeChatBase {
         if (json_last_error() === JSON_ERROR_NONE) {
             $result['errcode'] = $result['errcode'] ?? -999999;
 
-            if ($result['errcode'] === 0 || $result['errcode'] === -999999) {
+            if (in_array($result['errcode'], [0, -999999])) {
                 return $result;
             }
 
@@ -116,6 +120,10 @@ abstract class WeChatBase {
      * @throws WeChatUtilsGeneralException
      */
     protected function httpRequest(string $uri, array $options = [], string $method = 'GET'): StreamInterface {
+        if ($this->debug) {
+            $options['query']['debug'] = 1;
+        }
+
         try {
             return $this->httpClient->request($method, $uri, $options)->getBody();
         } catch (Throwable $e) {

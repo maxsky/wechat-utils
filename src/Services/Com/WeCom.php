@@ -20,9 +20,9 @@ class WeCom extends WeChatBase {
     private $serverToken;
     private $aesKey;
 
-    public function __construct(string  $app_id,
-                                ?string $app_secret = null, ?string $server_token = null, ?string $aes_key = null) {
-        parent::__construct($app_id, $app_secret);
+    public function __construct(string  $app_id, ?string $app_secret = null,
+                                ?string $server_token = null, ?string $aes_key = null, bool $debug = false) {
+        parent::__construct($app_id, $app_secret, $debug);
 
         $this->serverToken = $server_token;
 
@@ -75,6 +75,29 @@ class WeCom extends WeChatBase {
     }
 
     /**
+     * 获取子部门 ID 列表（性能强于 getDepartmentIdList）
+     *
+     * @url https://developer.work.weixin.qq.com/document/path/95350
+     *
+     * @param int|null $id
+     *
+     * @return array
+     * @throws WeChatUtilsGeneralException
+     */
+    public function getDepartmentSubList(?int $id = null): array {
+        $this->issetAccessToken();
+
+        $response = $this->httpRequest(WECHAT_COM_GET_DEPARTMENT_SUB_LIST, [
+            'query' => [
+                'access_token' => $this->access_token ?? null,
+                'id' => $id
+            ]
+        ]);
+
+        return $this->handleResponse($response);
+    }
+
+    /**
      * @url https://developer.work.weixin.qq.com/document/path/90200
      *
      * @param int $department_id
@@ -86,6 +109,27 @@ class WeCom extends WeChatBase {
         $this->issetAccessToken();
 
         $response = $this->httpRequest(WECHAT_COM_GET_DEPARTMENT_USER_LIST, [
+            'query' => [
+                'access_token' => $this->access_token,
+                'department_id' => $department_id
+            ]
+        ]);
+
+        return $this->handleResponse($response);
+    }
+
+    /**
+     * @url https://developer.work.weixin.qq.com/document/path/95351
+     *
+     * @param int $department_id
+     *
+     * @return array
+     * @throws WeChatUtilsGeneralException
+     */
+    public function getDepartment(int $department_id): array {
+        $this->issetAccessToken();
+
+        $response = $this->httpRequest(WECHAT_COM_GET_DEPARTMENT, [
             'query' => [
                 'access_token' => $this->access_token,
                 'department_id' => $department_id
@@ -223,13 +267,16 @@ class WeCom extends WeChatBase {
                                   int $expires_in = 604800, int $chat_expires_in = 86400, array $options = []): array {
         $this->issetAccessToken();
 
+        if ($is_temp) {
+            $options['is_temp'] = $is_temp;
+            $options['expires_in'] = $expires_in;
+            $options['chat_expires_in'] = $chat_expires_in;
+        }
+
         $params = array_merge([
             'type' => $type,
             'scene' => $scene,
-            'state' => $state,
-            'is_temp' => $is_temp,
-            'expires_in' => $expires_in,
-            'chat_expires_in' => $chat_expires_in
+            'state' => $state
         ], $options);
 
         $response = $this->httpRequest(WECHAT_COM_ADD_CONTACT_WAY, [

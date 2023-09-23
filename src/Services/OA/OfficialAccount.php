@@ -11,26 +11,58 @@ namespace MaxSky\WeChat\Services\OA;
 
 use MaxSky\WeChat\Exceptions\WeChatUtilsGeneralException;
 use MaxSky\WeChat\Services\WeChatBase;
-use MaxSky\WeChat\Utils\Traits\SignPackage;
 use MaxSky\WeChat\Utils\Traits\WeChatOAMessage;
 use Psr\Http\Message\StreamInterface;
 
 class OfficialAccount extends WeChatBase {
 
-    use WeChatOAMessage, SignPackage;
+    use WeChatOAMessage;
 
     private $serverToken;
     private $aesKey;
 
     protected $jsapi_ticket;
 
-    public function __construct(string $app_id,
-                                string $app_secret, ?string $server_token = null, ?string $aes_key = null) {
-        parent::__construct($app_id, $app_secret);
+    public function __construct(string  $app_id, string $app_secret,
+                                ?string $server_token = null, ?string $aes_key = null, bool $debug = false) {
+        parent::__construct($app_id, $app_secret, $debug);
 
         $this->serverToken = $server_token;
 
         $this->aesKey = $aes_key ? base64_decode("$aes_key=") : null;
+    }
+
+    /**
+     * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#62
+     *
+     * @param string $url
+     *
+     * @return array
+     * @throws WeChatUtilsGeneralException
+     */
+    public function getSignPackage(string $url): array {
+        if (!$this->jsapi_ticket) {
+            throw new WeChatUtilsGeneralException('Must set JsApi Ticket first.');
+        }
+
+        $timestamp = time();
+
+        $nonceStr = $this->str_random();
+
+        // Key order by ASCII
+        $string = "jsapi_ticket=$this->jsapi_ticket&noncestr=$nonceStr&timestamp=$timestamp&url=$url";
+
+        $signature = sha1($string);
+
+        $result = [
+            'appId' => $this->appId,
+            'nonceStr' => $nonceStr,
+            'timestamp' => $timestamp,
+            'url' => $url,
+            'signature' => $signature
+        ];
+
+        return $this->debug ? $result + ['rawString' => $string] : $result;
     }
 
     /**
@@ -194,7 +226,7 @@ class OfficialAccount extends WeChatBase {
 
         if (in_array($action_name, WECHAT_SCENE_LIMIT)) {
             $scene = ['scene_str' => $scene_value];
-        } elseif (in_array($action_name, WECHAT_SCENE)) {
+        } else if (in_array($action_name, WECHAT_SCENE)) {
             $scene = ['scene_id' => $scene_value];
         } else {
             throw new WeChatUtilsGeneralException('场景对应场景值数据类型错误');
