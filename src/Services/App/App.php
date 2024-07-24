@@ -15,10 +15,10 @@ use MaxSky\WeChat\Services\WeChatBase;
 class App extends WeChatBase {
 
     /**
-     * @url https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
+     * 通过客户端 SDK 返回的 Access Token 以及 OpenID 获取用户信息
+     * 一般情况下，App 开发无需自行实现 Code 换取工作，如有需要，请调用 getUserInfoByAuthCode 方法进行用户信息获取
      *
-     * 通过客户端 SDK 返回的 Access Token 以及 OpenID 获取用户信息。一般情况下，App 开发无需自行实现 Code 换取工作，
-     * 如有需要，情调用 getUserInfoByAuthCode 方法进行用户信息获取
+     * @url https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
      *
      * @param string $auth_access_token 授权后 Access Token
      * @param string $open_id           用户 OpenID
@@ -40,9 +40,9 @@ class App extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E9%80%9A%E8%BF%87-code-%E8%8E%B7%E5%8F%96-access-token
-     *
      * 通过授权返回 Code 获取用户信息
+     *
+     * @url https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E9%80%9A%E8%BF%87-code-%E8%8E%B7%E5%8F%96-access-token
      *
      * @param string $code
      * @param string $lang

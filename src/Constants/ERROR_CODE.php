@@ -23,6 +23,7 @@ const WECHAT_MSG_ERROR_CODE = [
 
 const WECHAT_MP_ERROR_CODE = [
     -41001 => 'EncodingAESKey error',
+    -41002 => 'Illegal IV',
     -41003 => 'AES decrypt failed',
     -41004 => 'Buffer of decrypt invalid',
     -41005 => 'Base64 encode failed',

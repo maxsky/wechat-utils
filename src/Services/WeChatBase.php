@@ -35,9 +35,9 @@ abstract class WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
-     *
      * 获取全局 Access Token，此 Token 与 Auth Access Token（即微信授权登录返回 Token） 不同
+     *
+     * @url https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
      *
      * @param string|null $app_id
      * @param string|null $app_secret

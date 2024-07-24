@@ -33,6 +33,8 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
+     * 获取签名包，用于微信 JS-SDK
+     *
      * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#62
      *
      * @param string $url
@@ -66,10 +68,10 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
+     * 通过授权返回 Code 获取用户信息
+     *
      * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html#1
      * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html#3
-     *
-     * 通过授权返回 Code 获取用户信息
      *
      * @param string $code
      *
@@ -100,9 +102,9 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId
-     *
      * 获取用户基本信息（UnionID 机制）
+     *
+     * @url https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId
      *
      * @param string $open_id
      * @param string $lang
@@ -125,9 +127,9 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#54
-     *
      * 通过 Access Token 获取 JS API Ticket
+     *
+     * @url https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#54
      *
      * @return string
      * @throws WeChatUtilsGeneralException
@@ -163,9 +165,9 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html#5
-     *
      * 发送模板消息
+     *
+     * @url https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html#5
      *
      * @param string      $open_id       接收者
      * @param string      $template_id   模板 ID
@@ -204,9 +206,9 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html
-     *
      * 生成带参二维码
+     *
+     * @url https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html
      *
      * @param bool       $limit          是否生成永久二维码
      * @param string     $action_name    可选值：QR_SCENE | QR_STR_SCENE | QR_LIMIT_SCENE | QR_LIMIT_STR_SCENE
@@ -258,9 +260,9 @@ class OfficialAccount extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html
+     * 通过二维码 Ticket 换取二维码图片
      *
-     * 通过 Ticket 换取二维码
+     * @url https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html
      *
      * @param string $ticket
      *

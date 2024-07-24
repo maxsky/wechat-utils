@@ -18,9 +18,9 @@ class MiniProgram extends WeChatBase {
     use WeChatMPUtil;
 
     /**
-     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-login/code2Session.html
-     *
      * 通过 Code 获取 session_key（会话密钥）
+     *
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-login/code2Session.html
      *
      * @param string $code
      *
@@ -41,9 +41,9 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/phone-number/getPhoneNumber.html
-     *
      * 通过 Code 获取用户手机号码
+     *
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/phone-number/getPhoneNumber.html
      *
      * @param string $code
      *
@@ -66,9 +66,9 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qrcode-link/qr-code/getQRCode.html
-     *
      * 获取有数量限制的小程序码
+     *
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qrcode-link/qr-code/getQRCode.html
      *
      * @param string $path        小程序页面路径，最长 1024 字节
      * @param int    $width       二维码宽度，单位 px。默认 430，最小 280；最大 1280
@@ -103,9 +103,9 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qrcode-link/qr-code/getUnlimitedQRCode.html
-     *
      * 获取无数量限制的小程序码（适用于自定义参数，包含场景、类型等）
+     *
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/qrcode-link/qr-code/getUnlimitedQRCode.html
      *
      * @param string      $scene       最大 32 个可见字符，只支持数字，大小写英文以及部分特殊字符
      * @param string|null $page        小程序页面
@@ -144,9 +144,9 @@ class MiniProgram extends WeChatBase {
     }
 
     /**
-     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/sendMessage.html
-     *
      * 发送订阅消息
+     *
+     * @url https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/sendMessage.html
      *
      * @param string      $open_id           接收者
      * @param string      $template_id       订阅模板 ID
